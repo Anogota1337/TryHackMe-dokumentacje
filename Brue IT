@@ -1,4 +1,4 @@
-2. Reconnaissance 
+2. <h2>Reconnaissance</h2> 
 Pierwszmi naszymi krokami będzie sprawdzenie nmap'em ile portów jest otwartych, uprzedimy nastepne pytania i dodamy pare przełączników aby na nie odpowiedzieć.
 Pierwszym będzie -sV | Bada otwarte porty aby określić informacje o usłudze i wersji. 
 Drugi -sS | Czyli skan SYN 
