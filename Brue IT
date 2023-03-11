@@ -53,4 +53,6 @@ Pierwszą jakiego poświadczenia strona używa czy jest to http czy https
 POST /admin/index.php HTTP/1.1
 
 Następna rzeczą jakie to jest żądanie POST czy GET, można to wyczytać w pierwszej linicje przechyconego pakietu
-Kolejną rzeczą będzie 
+Kolejną rzeczą będzie sprawdzenie input jaką naszą nazwę aby dokładnie określić hydrze. W naszym przypadku będzie to:
+<input type="text" name="user">
+<input type="password" name="pass">
