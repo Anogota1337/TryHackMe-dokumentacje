@@ -1,0 +1,36 @@
+2. Reconnaissance 
+Pierwszmi naszymi krokami będzie sprawdzenie nmap'em ile portów jest otwartych, uprzedimy nastepne pytania i dodamy pare przełączników aby na nie odpowiedzieć.
+Pierwszym będzie -sV | Bada otwarte porty aby określić informacje o usłudze i wersji. 
+Drugi -sS | Czyli skan SYN 
+I tyle powinno nam wystarczyć aby dokonać pełnego rekonesanu jaki wymaga od nas zadanie.
+    Pierwsze pytanie 1: How many ports open? 
+Z naszych skanownia dowiadujemy się, że 2 porty są otwarte jest to SSH oraz Apache.
+    Drugie pytanie 2: What version of SSH is running?
+Skanowanie ukazało nam OpenSSH 7.6p1
+    Trzecie pytanie 3: What version of Apache is running?
+Jest to wersja 2.4.29
+    Czwarte pytanie 4: Which Linux distribution is running?
+W skanowaniach ukazała się nam Ubuntu.
+
+Pełna list skanowań jako uzyskaliśmy za pomocą nmap -sS -sV 
+Not shown: 998 closed tcp ports (reset)
+PORT   STATE SERVICE VERSION
+22/tcp open  ssh     OpenSSH 7.6p1 Ubuntu 4ubuntu0.3 (Ubuntu Linux; protocol 2.0)
+80/tcp open  http    Apache httpd 2.4.29 ((Ubuntu))
+Service Info: OS: Linux; CPE: cpe:/o:linux:linux_kernel
+
+    Piąte pytanie 5: Search for hidden directories on web server.
+                     What is the hidden directory?
+
+Posłuży nam tutaj do tego gobuster, zatem wpisujemy do terminala:
+gobuster dir -u MACHINE_IP -w /usr/share/wordlist/dirb/coomon.txt
+Wynik skanowania wygląda nastepująco
+
+/.htaccess            (Status: 403) [Size: 277]
+/.htpasswd            (Status: 403) [Size: 277]
+/.hta                 (Status: 403) [Size: 277]
+/admin                (Status: 301) [Size: 312] [--> http://10.10.71.138/admin/]
+/index.html           (Status: 200) [Size: 10918]
+/server-status        (Status: 403) [Size: 277]
+
+Jak widzmy mamy nasz ukrty katalog to admin, jak wejdziemy na strone
