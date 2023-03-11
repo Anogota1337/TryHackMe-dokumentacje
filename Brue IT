@@ -1,4 +1,4 @@
-2. Reconnaissance
+    █2. Reconnaissance█
 Pierwszmi naszymi krokami będzie sprawdzenie nmap'em ile portów jest otwartych, uprzedimy nastepne pytania i dodamy pare przełączników aby na nie odpowiedzieć.
 Pierwszym będzie -sV | Bada otwarte porty aby określić informacje o usłudze i wersji. 
 Drugi -sS | Czyli skan SYN 
@@ -33,4 +33,24 @@ Wynik skanowania wygląda nastepująco
 /index.html           (Status: 200) [Size: 10918]
 /server-status        (Status: 403) [Size: 277]
 
-Jak widzmy mamy nasz ukrty katalog to admin, jak wejdziemy na strone
+Jak widzmy mamy nasz ukrty katalog to admin, jak wejdziemy na strone i zobaczymy co się kryje w naszym kodzie żródłowym zauważmy notatkę:
+<!-- Hey john, if you do not remember, the username is admin -->
+Dobrze ale mimo tego, że znależliśmy nasz katalog admin bądzmy jeszcze trochę bardziej dociekliwi i puśćmy raz jeszcze gobustera ale na katalog /admin.
+gobuster dir -u MACHINE_IP/admin -w /usr/share/wordlist/dirb/common.txt
+
+/.hta                 (Status: 403) [Size: 278]
+/.htaccess            (Status: 403) [Size: 278]
+/.htpasswd            (Status: 403) [Size: 278]
+/index.php            (Status: 200) [Size: 671]
+/panel                (Status: 301) [Size: 320] [--> http://10.10.209.230/admin/panel/]
+
+Ukazuje nam się index.php i to w tym momencie będzie naszym głównym celem
+    █3.Getting a shell█
+    Pierwsze pytanie 1. What is the user:password of the admin panel?
+Tutaj wykorzystamy hydre aby złamać hasło będzie nam do tego potrzebne pare informacji odniśnie tego, będziemy musieli posłużyć się BurpSuite.
+Pierwszą jakiego poświadczenia strona używa czy jest to http czy https
+
+POST /admin/index.php HTTP/1.1
+
+Następna rzeczą jakie to jest żądanie POST czy GET, można to wyczytać w pierwszej linicje przechyconego pakietu
+Kolejną rzeczą będzie 
