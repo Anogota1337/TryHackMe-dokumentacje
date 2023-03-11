@@ -56,3 +56,8 @@ Następna rzeczą jakie to jest żądanie POST czy GET, można to wyczytać w pi
 Kolejną rzeczą będzie sprawdzenie input jaką naszą nazwę aby dokładnie określić hydrze. W naszym przypadku będzie to:
 <input type="text" name="user">
 <input type="password" name="pass">
+I następną rzeczą która musimy skopiować jest to komunikat, który ukazuje się nam po błędnym wpisaniu hasła.
+W tym przypadku jest to Username or password invalid.
+
+Dobrze więc skoro mamy wszystko aby ułożyć polecenie dla hydry czas zacząć!
+hydra -l admin -P rockyou.txt MACHINE_IP http-post-form “/admin/index.php:user=^USER^&pass=^PASS^:invalid”
