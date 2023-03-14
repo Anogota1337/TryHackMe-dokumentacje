@@ -1,0 +1,52 @@
+  1. Reconnaissance
+  1.1  Scan the machine, how many ports are open? 
+Pierwszym naszym krokiem będzie przeskanowanie maszyny więc standardowo posłużmy się nmap'em. nmap -sV -sS -A MACHINE_IP
+Otrzymane wyniki skanownia posłużą nam do wykonania zadań:
+Nmap scan report for 10.10.41.60
+Host is up (0.052s latency).
+Not shown: 998 closed tcp ports (reset)
+PORT   STATE SERVICE VERSION
+22/tcp open  ssh     OpenSSH 7.6p1 Ubuntu 4ubuntu0.3 (Ubuntu Linux; protocol 2.0)
+| ssh-hostkey: 
+|   2048 4ab9160884c25448ba5cfd3f225f2214 (RSA)
+|   256 a9a686e8ec96c3f003cd16d54973d082 (ECDSA)
+|_  256 22f6b5a654d9787c26035a95f3f9dfcd (ED25519)
+80/tcp open  http    Apache httpd 2.4.29 ((Ubuntu))
+|_http-server-header: Apache/2.4.29 (Ubuntu)
+| http-cookie-flags: 
+|   /: 
+|     PHPSESSID: 
+|_      httponly flag not set
+|_http-title: HackIT - Home
+
+Więc na pierwszą odpowiedzią będzie, że 2 porty są otwarte.
+
+  1.2 What version of Apache is running?
+Możemy zobaczyć, że na porcie 80 jest otwarta usługa Apache i posiada wersje 2.4.29
+  1.3 What service is running on port 22?
+Ponownie musimy skorzystać z naszych otrzymanych skanowań, na porcie 22 znajduje się usługa SSH.
+  1.4 Answer
+  1.5 What is the hidden directory?
+Tutaj wykorzystamy gobuster, gobuster dir -u MACHINE_IP -w /usr/share/wordlist/dirb/common.txt
+Wyniki przeszukiwania katalogów:
+
+/.htpasswd            (Status: 403) [Size: 276]
+/.hta                 (Status: 403) [Size: 276]
+/.htaccess            (Status: 403) [Size: 276]
+/css                  (Status: 301) [Size: 308] [--> http://10.10.41.60/css/]
+/index.php            (Status: 200) [Size: 616]
+/js                   (Status: 301) [Size: 307] [--> http://10.10.41.60/js/]
+/panel                (Status: 301) [Size: 310] [--> http://10.10.41.60/panel/]
+/server-status        (Status: 403) [Size: 276]
+/uploads              (Status: 301) [Size: 312] [--> http://10.10.41.60/uploads/]
+
+Odpowiedzią na pytanie 5 jest /panel/
+
+  2.1 user.txt
+W tym zadaniu będzie sporo kroków do zrobienia, pierwszą naszą rzeczą do zrobienia będzie skopiowanie revershell'a 
+
+
+
+
+
+
